@@ -17,7 +17,14 @@ class TodosController extends Controller
      */
     public function index()
     {
-        return view('todos.index');
+        $data = array(
+            'action' => '/todos/store',
+            'form_info' => array(
+                'method' => 'POST',
+            )
+        );
+
+        return view('todos.index', $data);
     }
 
     /**
@@ -27,14 +34,7 @@ class TodosController extends Controller
      */
     public function create()
     {
-        $data = array(
-            'action' => '/todos/store',
-            'form_info' => array(
-                'method' => 'POST',
-            )
-        );
 
-        return view('todos.form', $data);
     }
 
     /**
