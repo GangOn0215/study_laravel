@@ -89,9 +89,7 @@
 <main class="hidden md:flex h-full">
     <aside class="bg-white h-full w-1/6 shadow-sm border border-gray-300"></aside>
     <article class="h-full w-full">
-        <section class="flex h-full w-full justify-center">
-            @yield('content')
-        </section>
+        @yield('content')
     </article>
 </main>
 </body>

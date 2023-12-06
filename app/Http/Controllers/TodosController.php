@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\todos;
+use App\Models\Todos;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TodosController extends Controller
 {
@@ -15,7 +16,7 @@ class TodosController extends Controller
      *
      * @return Application|Factory|View
      */
-    public function index()
+    public function index(Request $request)
     {
         $data = array(
             'action' => '/todos/store',
@@ -24,6 +25,11 @@ class TodosController extends Controller
             )
         );
 
+        $todos = Todos::all()->where('created_member', 1);
+
+        foreach($todos as $row) {
+            var_dump($row->subject);
+        }
         return view('todos.index', $data);
     }
 

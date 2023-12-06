@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BoardsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TodosController;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,7 +21,11 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::resource('todos', \App\Http\Controllers\TodosController::class);
+Route::get('/project', function() {
+    return view('project/index');
+});
+
+Route::resource('todos', TodosController::class)->middleware('auth');
 
 Route::resource('boards', BoardsController::class);
 
@@ -35,7 +40,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::group(['prefix' => 'study'], function () {
-    Route::get('a01_default', );
+    Route::get('a01_default');
 
     Route::post('a01_default', function(Request $request) {});
 

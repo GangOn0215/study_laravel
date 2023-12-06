@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('todos', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('created_member');
             $table->date('date');
             $table->string('subject');
             $table->string('content');
