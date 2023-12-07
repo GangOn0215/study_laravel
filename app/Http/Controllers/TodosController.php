@@ -15,31 +15,18 @@ class TodosController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Application|Factory|View
+     * @return View
      */
-    public function index(Request $request)
+    public function index() : View
     {
         $data = array();
 
-        // $todos = Todos::get()->where('created_member', auth::id());
         $todos = Todos::where('created_member', Auth::id())
             ->orderBy('id', 'desc')
             ->get();
 
-        $todosList = array();
-
-        foreach($todos as $row) {
-            $todosList[] = [
-                'id' => $row->id,
-                'subject' => $row->subject,
-                'content' => $row->content,
-                'date' => $row->date
-            ];
-        }
-
-        $data['application'] = $todosList;
-
-        return view('todos.index', $data);
+        $data['application'] = $todos;
+        return view('todos.index')->with('application', $todos);
     }
 
     /**
@@ -77,45 +64,57 @@ class TodosController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\todos  $todos
-     * @return \Illuminate\Http\Response
+     * @param Todos $todo
+     * @return Application|Factory|View
      */
-    public function show(todos $todos)
+    public function show(Todos $todo)
     {
-        //
+        $todo = Todos::where('id', $todo->id)->first();
+
+        return view('todos.view')->with('row', $todo);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\todos  $todos
-     * @return \Illuminate\Http\Response
+     * @param Todos $todo
+     * @return Application|Factory|View
      */
-    public function edit(todos $todos)
+    public function edit(Todos $todo)
     {
-        //
+        $todos = Todos::where('id', $todo->id)->first();
+
+        return view('todos.form')->with('row', $todos);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  \App\Models\todos  $todos
+     * @param Todos $todo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, todos $todos)
+    public function update(Request $request, todos $todo)
     {
-        //
+        $request->validate([
+            'subject' => 'required'
+        ]);
+
+        $todo->update($request->all());
+
+        return redirect()->route('todos.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\todos  $todos
+     * @param Todos $todo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(todos $todos)
+    public function destroy(Todos $todo)
     {
-        //
+        $todo->delete();
+
+        return redirect()->route('todos.index');
     }
 }

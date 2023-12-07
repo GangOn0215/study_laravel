@@ -18,7 +18,7 @@
     <div class="flex h-full items-start w-full">
         <div class="flex items-center logo h-full w-1/6 justify-center">
             <a href="/" class="flex items-center h-full">
-                <img src="../assets/image/logo.png" alt="" srcset="" class="h-5/6">
+                <img src="/assets/image/logo.png" alt="" srcset="" class="h-5/6">
             </a>
         </div>
         <nav class="h-full w-full">
