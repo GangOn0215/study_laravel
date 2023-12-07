@@ -6,6 +6,7 @@ use App\Models\Todos;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,18 +19,26 @@ class TodosController extends Controller
      */
     public function index(Request $request)
     {
-        $data = array(
-            'action' => '/todos/store',
-            'form_info' => array(
-                'method' => 'POST',
-            )
-        );
+        $data = array();
 
-        $todos = Todos::all()->where('created_member', 1);
+        // $todos = Todos::get()->where('created_member', auth::id());
+        $todos = Todos::where('created_member', Auth::id())
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $todosList = array();
 
         foreach($todos as $row) {
-            var_dump($row->subject);
+            $todosList[] = [
+                'id' => $row->id,
+                'subject' => $row->subject,
+                'content' => $row->content,
+                'date' => $row->date
+            ];
         }
+
+        $data['application'] = $todosList;
+
         return view('todos.index', $data);
     }
 
@@ -40,18 +49,29 @@ class TodosController extends Controller
      */
     public function create()
     {
-
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'subject' => 'required',
+        ]);
 
+        $data = array(
+            'subject' => $request['subject'],
+            'created_member' => auth::id(),
+            'date' => date('Y-m-d')
+        );
+
+        Todos::create($data);
+
+        return redirect()->route('todos.index');
     }
 
     /**
@@ -79,7 +99,7 @@ class TodosController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Models\todos  $todos
      * @return \Illuminate\Http\Response
      */

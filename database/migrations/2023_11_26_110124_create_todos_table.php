@@ -18,7 +18,7 @@ return new class extends Migration
             $table->bigInteger('created_member');
             $table->date('date');
             $table->string('subject');
-            $table->string('content');
+            $table->string('content')->nullable();
             $table->timestamps();
         });
     }
