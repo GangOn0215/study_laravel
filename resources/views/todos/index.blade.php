@@ -3,7 +3,15 @@
 @section('content')
     <section class="flex h-full w-full justify-center">
         <div class="flex flex-col h-full justify-center w-2/6 todo-container">
-            <form action="{{ route('todos.store') }}" method="post">
+            <div class="flex date-container">
+                <div class="flex justify-between items-center w-full">
+                    <input type="text" class="border border-gray-400 p-2 datepicker" placeholder="start date" readonly>
+                    <span class="font-bold text-2xl">~</span>
+                    <input type="text" class="border border-gray-400 p-2 datepicker" placeholder="end date" readonly>
+                </div>
+            </div>
+
+            <form action="{{ route('todos.store') }}" method="post" class="mt-6">
                 @csrf
                 <div class="flex flex-col w-full ">
                     <div class="flex w-full h-10 todo-header">
