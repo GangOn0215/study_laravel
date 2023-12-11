@@ -9,9 +9,16 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 
 class TodosController extends Controller
 {
+    private $data = array();
+
+    public function __construct()
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,14 +26,13 @@ class TodosController extends Controller
      */
     public function index() : View
     {
-        $data = array();
-
         $todos = Todos::where('created_member', Auth::id())
             ->orderBy('id', 'desc')
             ->get();
 
         $data['application'] = $todos;
-        return view('todos.index')->with('application', $todos);
+
+        return view('todos.index')->with('data', $data);
     }
 
     /**
@@ -34,8 +40,24 @@ class TodosController extends Controller
      *
      * @return Application|Factory|View
      */
-    public function create()
+    public function create(): View|Factory|Application
     {
+        $application = new \stdClass;
+        $todoColumns = Todos::getColumnList();
+
+        foreach($todoColumns as $column) {
+            $application->$column = '';
+        }
+
+        $data['application'] = $application;
+
+        $data['form_init'] = array(
+            'action' => 'todos.store',
+            'method' => 'POST',
+            'submit_text' => '확인'
+        );
+
+        return view('todos.form')->with('data', $data);
     }
 
     /**
@@ -44,7 +66,7 @@ class TodosController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'subject' => 'required',
@@ -52,6 +74,7 @@ class TodosController extends Controller
 
         $data = array(
             'subject' => $request['subject'],
+            'content' => $request['content'],
             'created_member' => auth::id(),
             'date' => date('Y-m-d')
         );
@@ -67,11 +90,11 @@ class TodosController extends Controller
      * @param Todos $todo
      * @return Application|Factory|View
      */
-    public function show(Todos $todo)
+    public function show(Todos $todo): View|Factory|Application
     {
-        $todo = Todos::where('id', $todo->id)->first();
+        $todos = Todos::where('id', $todo->id)->first();
 
-        return view('todos.view')->with('row', $todo);
+        return view('todos.view')->with('row', $todos);
     }
 
     /**
@@ -80,11 +103,19 @@ class TodosController extends Controller
      * @param Todos $todo
      * @return Application|Factory|View
      */
-    public function edit(Todos $todo)
+    public function edit(Todos $todo): View|Factory|Application
     {
-        $todos = Todos::where('id', $todo->id)->first();
+        $application = Todos::where('id', $todo->id)->first();
 
-        return view('todos.form')->with('row', $todos);
+        $data['application'] = $application;
+
+        $data['form_init'] = array(
+            'action' => 'todos.update',
+            'method' => 'PATCH',
+            'submit_text' => '수정'
+        );
+
+        return view('todos.form')->with('data', $data);
     }
 
     /**
@@ -92,9 +123,9 @@ class TodosController extends Controller
      *
      * @param Request $request
      * @param Todos $todo
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function update(Request $request, todos $todo)
+    public function update(Request $request, todos $todo): RedirectResponse
     {
         $request->validate([
             'subject' => 'required'
@@ -109,9 +140,9 @@ class TodosController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Todos $todo
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function destroy(Todos $todo)
+    public function destroy(Todos $todo): RedirectResponse
     {
         $todo->delete();
 
