@@ -1,0 +1,17 @@
+aside {
+    display: block;
+}
+
+@media (max-width: 1200px) {
+    body {
+        height: 100%;
+    }
+
+    aside {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+
+}
