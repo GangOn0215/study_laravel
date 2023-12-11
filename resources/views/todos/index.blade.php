@@ -1,30 +1,25 @@
-@extends('layouts.layout')
+@extends('todos.layout')
 
 @section('content')
     <section class="flex h-full w-full justify-center">
         <div class="flex flex-col h-full justify-center w-2/6 todo-container">
-            <div class="flex date-container">
+            <div class="flex todo-header">
                 <div class="flex justify-between items-center w-full">
-                    <input type="text" class="border border-gray-400 p-2 datepicker" placeholder="start date" readonly>
-                    <span class="font-bold text-2xl">~</span>
-                    <input type="text" class="border border-gray-400 p-2 datepicker" placeholder="end date" readonly>
+                    <div class="flex justify-between items-center w-full mr-4">
+                        <input type="text" class="w-full border border-gray-400 p-2 mr-4 datepicker" placeholder="start date" readonly>
+                        <input type="text" class="w-full border border-gray-400 p-2  datepicker" placeholder="end date" readonly>
+                    </div>
+                    <button class="flex-shrink-0 p-2 border border-gray-400 w-24">검색</button>
                 </div>
             </div>
 
-            <form action="{{ route('todos.store') }}" method="post" class="mt-6">
-                @csrf
-                <div class="flex flex-col w-full ">
-                    <div class="flex w-full h-10 todo-header">
-                        <input type="text" name="subject" class="w-full border border-gray-400 mr-4 p-2">
-                        <button class="w-24  flex-shrink-0 border border-gray-400">추가</button>
-                    </div>
+            <div class="flex justify-end mt-8">
+                <a href="{{route('todos.create')}}" class="w-24 py-1 px-2 border border-gray-400 text-center">Create</a>
+            </div>
 
-                </div>
-            </form>
-
-            <div class="flex w-full todo-body mt-8">
+            <div class="flex w-full todo-body border border-gray-400 p-4 mt-4">
                 <ul class="flex flex-col w-full">
-                    @foreach($application as $row)
+                    @foreach($data['application'] as $row)
                         <li class="flex w-full items-center justify-between h-10 mb-4">
                             <span class="w-5/6 p-2 border border-gray-300 mr-4">
                                 <a href="{{route('todos.show', $row->id)}}">

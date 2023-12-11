@@ -1,5 +1,8 @@
-
 @extends('layouts/layout')
+
+@section('link')
+    @vite('resources/css/project/project.css')
+@endsection
 
 @section('content')
     <section class="project-container">

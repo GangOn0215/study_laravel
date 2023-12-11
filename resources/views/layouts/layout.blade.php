@@ -11,8 +11,9 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://kit.fontawesome.com/1490d4417f.js" crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/assets/css/common.css">
-
+    @vite('resources/css/common.css')
+    @vite('resources/css/layout.css')
+    @yield('link')
 </head>
 <body class="antialiased bg-white">
 
@@ -88,7 +89,7 @@
     </div>
 </div>
 
-<main class="hidden md:flex h-full">
+<main class="flex h-full">
     <aside class="bg-white h-full w-1/6 shadow-sm border border-gray-300"></aside>
     <article class="h-full w-full">
         @yield('content')
