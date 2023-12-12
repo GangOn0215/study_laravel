@@ -123,17 +123,19 @@ class TodosController extends Controller
      *
      * @param Request $request
      * @param Todos $todo
-     * @return RedirectResponse
+     * @return \Illuminate\Http\JsonResponse|RedirectResponse
      */
-    public function update(Request $request, todos $todo): RedirectResponse
+    public function update(Request $request, todos $todo)
     {
-        $request->validate([
-            'subject' => 'required'
-        ]);
-
         $todo->update($request->all());
+        $requestData = $request->all('ajax');
 
-        return redirect()->route('todos.index');
+        if($requestData['ajax']) {
+            return response()->json([ 'state' => true ]);
+        } else {
+            return redirect()->route('todos.index');
+        }
+
     }
 
     /**

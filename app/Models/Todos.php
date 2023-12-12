@@ -8,14 +8,15 @@ use Illuminate\Support\Facades\Schema;
 
 class Todos extends Model
 {
-    private static $mainTableName = 'todo';
+    private static $mainTableName = 'todos';
     use HasFactory;
 
     protected $fillable = [
         'created_member',
         'date',
         'subject',
-        'content'
+        'content',
+        'is_check'
     ];
 
     public static function getColumnList() {

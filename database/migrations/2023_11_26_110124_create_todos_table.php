@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('date');
             $table->string('subject');
             $table->string('content')->nullable();
+            $table->boolean('is_check')->default(0);
             $table->timestamps();
         });
     }
@@ -30,6 +31,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('todos');
+        Schema::dropIfExists('todo');
     }
+
 };

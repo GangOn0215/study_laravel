@@ -27,6 +27,13 @@
                                 </a>
                             </span>
                             <div class="flex items-center justify-around w-24 h-full border">
+                                <button class="btn-check" data-id="{{$row->id}}" data-check="{{$row->is_check}}">
+                                    @if($row->is_check)
+                                        <i class="fa-solid fa-square-check"></i>
+                                    @else
+                                        <i class="fa-regular fa-square"></i>
+                                    @endif
+                                </button>
                                 <button class="">
                                     <a href="{{route('todos.edit', $row->id)}}">
                                         <i class="fa-solid fa-pen-to-square"></i>
@@ -44,6 +51,37 @@
                     @endforeach
                 </ul>
             </div>
+
         </div>
     </section>
+
+    <script>
+        const data = {};
+
+        $(window).on('load', function() {
+
+            $('.btn-check').on('click', function() {
+                const id = $(this).attr('data-id');
+                const isCheck = parseInt($(this).attr('data-check'));
+                const toggleCheck = isCheck === 1 ? 0 : 1;
+
+                $.ajax({
+                    type: 'POST',
+                    url: `todos/${id}`,
+                    dataType: 'json',
+                    data: { _token: '{{ csrf_token() }}', _method: 'PATCH', is_check: toggleCheck, ajax: true },
+                    success: function(response) {
+                        location.reload();
+                        if(response) {
+                        }
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                });
+            });
+
+
+        })
+    </script>
 @endsection
