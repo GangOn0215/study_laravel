@@ -14,6 +14,8 @@ class Todos extends Model
     protected $fillable = [
         'created_member',
         'date',
+        'image_hash_id',
+        'image_name',
         'subject',
         'content',
         'is_check'

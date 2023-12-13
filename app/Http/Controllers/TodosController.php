@@ -72,7 +72,23 @@ class TodosController extends Controller
             'subject' => 'required',
         ]);
 
+        $fileHashName = '';
+        $fileOriginalName = '';
+
+        if($request->hasfile('image')) {
+            $file = $request->file('image');
+            $fileOriginalName =  $file->getClientOriginalName();
+            $fileName = explode('.', $file->getClientOriginalName())[0];
+
+            $ext = $file->getClientOriginalExtension();
+
+            $fileHashName = md5($fileName) . '.' . $ext;
+            $path = $file->storeAs( 'uploads/todos', $fileHashName );
+        }
+
         $data = array(
+            'image_hash_id' => $fileHashName,
+            'image_name' => $fileOriginalName,
             'subject' => $request['subject'],
             'content' => $request['content'],
             'created_member' => auth::id(),
@@ -127,7 +143,33 @@ class TodosController extends Controller
      */
     public function update(Request $request, todos $todo)
     {
-        $todo->update($request->all());
+        $fileHashName = '';
+        $fileOriginalName = '';
+
+        if($request->hasfile('image')) {
+            $file = $request->file('image');
+            $fileOriginalName =  $file->getClientOriginalName();
+            $fileName = explode('.', $file->getClientOriginalName())[0];
+
+            $ext = $file->getClientOriginalExtension();
+
+            $fileHashName = md5($fileName) . '.' . $ext;
+            $path = $file->storeAs( 'uploads/todos', $fileHashName );
+        }
+
+        $data = array(
+            'subject' => $request['subject'],
+            'content' => $request['content'],
+            'date' => date('Y-m-d')
+        );
+
+        if($fileHashName !== '' && $fileOriginalName !== '') {
+            $data['image_hash_id'] =  $fileHashName;
+            $data['image_name'] = $fileOriginalName;
+        }
+
+        $todo->update($data);
+
         $requestData = $request->all('ajax');
 
         if($requestData['ajax']) {
