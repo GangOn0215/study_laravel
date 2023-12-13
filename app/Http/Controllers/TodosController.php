@@ -143,6 +143,15 @@ class TodosController extends Controller
      */
     public function update(Request $request, todos $todo)
     {
+        $requestData = $request->all('ajax');
+
+        if($requestData['ajax'])
+        {
+            $todo->update($request->all());
+
+            return response()->json([ 'state' => true, 'id' => $todo->id ]);
+        }
+
         $fileHashName = '';
         $fileOriginalName = '';
 
@@ -170,13 +179,7 @@ class TodosController extends Controller
 
         $todo->update($data);
 
-        $requestData = $request->all('ajax');
-
-        if($requestData['ajax']) {
-            return response()->json([ 'state' => true, 'id' => $todo->id ]);
-        } else {
-            return redirect()->route('todos.index');
-        }
+        return redirect()->route('todos.index');
 
     }
 
