@@ -131,7 +131,7 @@ class TodosController extends Controller
         $requestData = $request->all('ajax');
 
         if($requestData['ajax']) {
-            return response()->json([ 'state' => true ]);
+            return response()->json([ 'state' => true, 'id' => $todo->id ]);
         } else {
             return redirect()->route('todos.index');
         }

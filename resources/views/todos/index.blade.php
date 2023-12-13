@@ -65,14 +65,26 @@
                 const isCheck = parseInt($(this).attr('data-check'));
                 const toggleCheck = isCheck === 1 ? 0 : 1;
 
+                const checkboxHtml = {
+                    0:  '<i class="fa-solid fa-square-check"></i>',
+                    1: '<i class="fa-regular fa-square"></i>'
+                }
+
                 $.ajax({
                     type: 'POST',
                     url: `todos/${id}`,
                     dataType: 'json',
                     data: { _token: '{{ csrf_token() }}', _method: 'PATCH', is_check: toggleCheck, ajax: true },
                     success: function(response) {
-                        location.reload();
-                        if(response) {
+                        // location.reload();
+                        if(response.state) {
+                            const checkedButton = $(`button.btn-check[data-id="${response.id}"]`);
+                            const checkedState = parseInt(checkedButton.attr('data-check'));
+
+                            checkedButton.attr('data-check', checkedState === 0 ? 1 : 0)
+
+                            checkedButton.empty();
+                            checkedButton.append(checkboxHtml[checkedState]);
                         }
                     },
                     error: function (e) {
