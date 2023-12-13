@@ -3,6 +3,7 @@
 use App\Http\Controllers\BoardsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TodosController;
+use App\Models\LogStatistics;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    $data = array(
+        'ip' => $_SERVER['REMOTE_ADDR'],
+        'request_uri' => $_SERVER['REQUEST_URI'],
+        'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+        'http_referer' => $_SERVER['HTTP_REFERER'],
+    );
+
+    LogStatistics::create($data);
+
     return view('index');
 });
 
