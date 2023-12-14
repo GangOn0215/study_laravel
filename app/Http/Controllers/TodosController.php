@@ -24,11 +24,18 @@ class TodosController extends Controller
      *
      * @return View
      */
-    public function index() : View
+    public function index(Request $request) : View
     {
-        $todos = Todos::where('created_member', Auth::id())
-            ->orderBy('id', 'desc')
-            ->get();
+        $requestAll = $request->all();
+
+        $startDate = $data['start_date'] = $requestAll['start_date'];
+        $endDate = $data['end_date'] = $requestAll['end_date'];
+
+        $todos = Todos::lists(array(
+            'limit' => 0,
+            'start' => 0,
+            'searches' => array('start_date' => $startDate, 'end_date' => $endDate, 'created_member' => Auth::id())
+        ));
 
         $data['application'] = $todos;
 

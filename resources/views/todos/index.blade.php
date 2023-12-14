@@ -4,13 +4,15 @@
     <section class="flex h-full w-full justify-center">
         <div class="flex flex-col h-full justify-center w-2/6 todo-container">
             <div class="flex todo-header">
-                <div class="flex justify-between items-center w-full">
-                    <div class="flex justify-between items-center w-full mr-4">
-                        <input type="text" class="w-full border border-gray-400 p-2 mr-4 datepicker" placeholder="start date" readonly>
-                        <input type="text" class="w-full border border-gray-400 p-2  datepicker" placeholder="end date" readonly>
+                <form action="{{route('todos.index')}}" method="get">
+                    <div class="flex justify-between items-center w-full">
+                        <div class="flex justify-between items-center w-full mr-4">
+                            <input type="text" name="start_date" class="w-full border border-gray-400 p-2 mr-4 datepicker" placeholder="start date" value="{{$data['start_date']}}" readonly>
+                            <input type="text" name="end_date" class="w-full border border-gray-400 p-2  datepicker" placeholder="end date" value="{{$data['end_date']}}" readonly>
+                        </div>
+                        <button class="flex-shrink-0 p-2 border border-gray-400 w-24">검색</button>
                     </div>
-                    <button class="flex-shrink-0 p-2 border border-gray-400 w-24">검색</button>
-                </div>
+                </form>
             </div>
 
             <div class="flex justify-end mt-8">
