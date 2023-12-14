@@ -17,6 +17,7 @@ class TodosController extends Controller
 
     public function __construct()
     {
+        $data['session'] = session();
     }
 
     /**
@@ -28,8 +29,8 @@ class TodosController extends Controller
     {
         $requestAll = $request->all();
 
-        $startDate = $data['start_date'] = $requestAll['start_date'];
-        $endDate = $data['end_date'] = $requestAll['end_date'];
+        $startDate = $data['start_date'] = $requestAll['start_date'] ?? null;
+        $endDate = $data['end_date'] = $requestAll['end_date'] ?? null;
 
         $todos = Todos::lists(array(
             'limit' => 0,
@@ -176,7 +177,7 @@ class TodosController extends Controller
         $data = array(
             'subject' => $request['subject'],
             'content' => $request['content'],
-            'date' => date('Y-m-d')
+            'date' => $request['date']
         );
 
         if($fileHashName !== '' && $fileOriginalName !== '') {
