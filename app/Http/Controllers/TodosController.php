@@ -32,6 +32,10 @@ class TodosController extends Controller
         $startDate = $data['start_date'] = $requestAll['start_date'] ?? null;
         $endDate = $data['end_date'] = $requestAll['end_date'] ?? null;
 
+        if(!$startDate && !$endDate) {
+            $startDate = $data['start_date'] = date('Y-m-d');
+        }
+
         $todos = Todos::lists(array(
             'limit' => 0,
             'start' => 0,
