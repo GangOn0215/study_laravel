@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Todos;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,15 +14,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('todos', function (Blueprint $table) {
+        //
+        Schema::create('todos_group_table', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('created_member');
-            $table->date('date');
-            $table->string('subject');
-            $table->string('content')->nullable();
-            $table->boolean('is_check')->default(0);
+            $table->foreignIdFor(Todos::class);
+            $table->string('name');
+            $table->integer('depth');
             $table->integer('sequence');
-            $table->integer('group_id');
             $table->timestamps();
         });
     }
@@ -33,7 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('todo');
+        Schema::dropIfExists('log_statistics');
     }
-
 };
