@@ -2,17 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="{{ asset('/assets/js/lib/jquery-3.7.1.js') }}"></script>
+    <script src="{{ asset('/assets/js/lib/jquery-ui.js') }}"></script>
+    @vite(['resources/js/app.js', 'resources/js/layout.js'])
+    @vite(['resources/css/app.css', 'resources/css/common.css', 'resources/css/layout.css', 'resources/css/lib/jquery-ui.css'])
     <script src="https://kit.fontawesome.com/1490d4417f.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    @vite('resources/css/common.css')
-    @vite('resources/css/layout.css')
     @yield('link')
 </head>
 <body class="antialiased bg-white">
@@ -98,4 +95,3 @@
 </body>
 </html>
 
-<script src="/assets/js/layout.js"></script>
