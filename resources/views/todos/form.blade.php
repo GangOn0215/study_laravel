@@ -9,7 +9,7 @@
                     @method($data['form_init']['method'])
                     <div class="flex flex-col w-full">
                         <div class="flex h-60 border border-gray-400 mb-4">
-                            <img src="{{asset('images_todos/' . $data['application']->image_hash_id)}}" alt="" id="image" class="object-cover">
+                            <img src="{{asset('storage/todos/' . $data['application']->image_hash_id)}}" alt="" id="image" class="object-cover">
                         </div>
                         <div class="flex date-container mb-4">
                             <input type="text" name="date" class="border border-gray-400 p-2 datepicker w-full" value="{{$data['application']->date ?: date('Y-m-d')}}" readonly>
@@ -57,7 +57,6 @@
             });
 
             $('#file-text').val(fileInfo.name);
-
         });
 
         </script>

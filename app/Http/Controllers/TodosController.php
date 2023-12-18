@@ -95,7 +95,7 @@ class TodosController extends Controller
             $ext = $file->getClientOriginalExtension();
 
             $fileHashName = md5($fileName) . '.' . $ext;
-            $path = $file->storeAs( 'uploads/todos', $fileHashName );
+            $path = $file->storeAs( 'public/todos/', $fileHashName);
         }
 
         $data = array(
@@ -175,7 +175,7 @@ class TodosController extends Controller
             $ext = $file->getClientOriginalExtension();
 
             $fileHashName = md5($fileName) . '.' . $ext;
-            $path = $file->storeAs( 'uploads/todos', $fileHashName );
+            $path = $file->storeAs( 'public/todos/', $fileHashName );
         }
 
         $data = array(
