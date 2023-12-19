@@ -1,8 +1,12 @@
 @extends('todos.layout')
 
+<style>
+    .ui-state-highlight-2 { height: 2.5em; line-height: 2.5em; margin: 1rem; background-color: #cdd1d7 !important; border: 1px solid #9ca3af !important; }
+</style>
+
 @section('content')
-    <section class="flex h-full w-full justify-center">
-        <div class="flex flex-col h-full justify-center w-2/6 todo-container">
+    <section class="flex w-full justify-center py-6">
+        <div class="flex flex-col h-full justify-center todo-container px-4">
             <div class="flex todo-header">
                 <form action="{{route('todos.index')}}" method="get">
                     <div class="flex justify-between items-center w-full">
@@ -15,14 +19,14 @@
                 </form>
             </div>
 
-            <div class="flex justify-end mt-8">
+            <div class="flex justify-end mt-4">
                 <a href="{{route('todos.create')}}" class="w-24 py-1 px-2 border border-gray-400 text-center">Create</a>
             </div>
 
             <div class="flex w-full todo-body border border-gray-400 p-4 mt-4">
-                <ul class="flex flex-col w-full">
+                <ul class="flex flex-col w-full" id="sortable">
                     @foreach($data['application'] as $row)
-                        <li class="flex w-full items-center justify-between h-10 mb-4">
+                        <li class="flex w-full items-center justify-between h-10 mb-4 ui-state-default bg-white border-0">
                             <span class="w-5/6 p-2 border border-gray-300 mr-4">
                                 <a href="{{route('todos.show', $row->id)}}">
                                     {{$row->subject}}
@@ -41,7 +45,7 @@
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                 </button>
-                                <form action="{{route('todos.destroy', $row->id)}}" method="post">
+                                <form action="{{route('todos.destroy', $row->id)}}" method="post" class="m-0">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit">
@@ -95,6 +99,13 @@
                 });
             });
 
+            const sortable = $('#sortable');
+
+            sortable.sortable({
+                placeholder: "ui-state-highlight-2"
+            });
+
+            sortable.disableSelection();
 
         })
     </script>
