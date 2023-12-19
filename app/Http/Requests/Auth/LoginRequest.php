@@ -39,6 +39,7 @@ class LoginRequest extends FormRequest
      */
     public function authenticate(): void
     {
+        // 로그인 요청이 maxAttempts(최대 요청 횟수) 이상인지 확인
         $this->ensureIsNotRateLimited();
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
@@ -62,6 +63,8 @@ class LoginRequest extends FormRequest
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
+
+        // 5번 이상 틀리면 Too many login attempts. Please try again in 45 seconds. 를 보여줌
 
         event(new Lockout($this));
 

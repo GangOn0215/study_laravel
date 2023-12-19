@@ -3,13 +3,13 @@
 @section('content')
     <section class="flex h-full w-full justify-center">
         <div class="flex justify-center items-center w-full">
-            <div class="flex flex-col h-full justify-center w-2/6 todo-container">
-                <form action="{{ route($data['form_init']['action'], $data['application']->id) }}" method="post" class="mt-4" enctype="multipart/form-data">
+            <div class="flex flex-col h-full justify-center todo-container py-8">
+                <form action="{{ route($data['form_init']['action'], $data['application']->id) }}" method="post" class="mt-4 h-full" enctype="multipart/form-data">
                     @csrf
                     @method($data['form_init']['method'])
-                    <div class="flex flex-col w-full">
+                    <div class="flex flex-col w-full h-full">
                         <div class="flex h-60 border border-gray-400 mb-4">
-                            <img src="{{asset('storage/todos/' . $data['application']->image_hash_id)}}" alt="" id="image" class="object-cover">
+                            <img src="{{ $data['application']->image_hash_id ? asset('storage/todos/' . $data['application']->image_hash_id) : ''  }}" alt="" id="image" class="object-cover">
                         </div>
                         <div class="flex date-container mb-4">
                             <input type="text" name="date" class="border border-gray-400 p-2 datepicker w-full" value="{{$data['application']->date ?: date('Y-m-d')}}" readonly>

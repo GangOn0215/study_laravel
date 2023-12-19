@@ -89,6 +89,10 @@ class Todos extends Model
 
         $result = $query->get();
 
+        $queries = \DB::getQueryLog();
+        $last_query = end($queries);
+
+//        var_dump($last_query); exit;
 
         return $result;
     }

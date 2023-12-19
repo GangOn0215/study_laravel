@@ -1,3 +1,13 @@
 .todo-container .todo-body {
     min-height: 40rem;
 }
+
+.todo-container {
+    width: 39rem;
+}
+
+@media (max-width: 757px) {
+    .todo-container {
+        padding: 2rem;
+    }
+}

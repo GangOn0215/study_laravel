@@ -27,8 +27,11 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        // 만약 user가 있다면 user 를 보여줄것이고 아니면 null 이겠지?
+
         $request->session()->regenerate();
 
+        // redirect()->intended() = 새 리디렉션 응답을 만듭니다.
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
