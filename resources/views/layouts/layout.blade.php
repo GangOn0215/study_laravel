@@ -7,8 +7,10 @@
     <title>Document</title>
     <script src="{{ asset('/assets/js/lib/jquery-3.7.1.js') }}"></script>
     <script src="{{ asset('/assets/js/lib/jquery-ui.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('/assets/css/lib/jquery-ui.css') }}">
+
     @vite(['resources/js/app.js', 'resources/js/layout.js'])
-    @vite(['resources/css/app.css', 'resources/css/common.css', 'resources/css/layout.css', 'resources/css/lib/jquery-ui.css'])
+    @vite(['resources/css/app.css', 'resources/css/common.css', 'resources/css/layout.css'])
     <script src="https://kit.fontawesome.com/1490d4417f.js" crossorigin="anonymous"></script>
     @yield('link')
 </head>
