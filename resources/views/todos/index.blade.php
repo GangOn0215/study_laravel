@@ -28,11 +28,15 @@
                     @foreach($data['application'] as $row)
                         <li class="flex w-full items-center justify-between h-10 mb-4 ui-state-default bg-white border-0">
                             <span class="w-5/6 p-2 border border-gray-300 mr-4">
+                        <li class="flex w-full items-center justify-between mb-4 ui-state-default bg-transparent border-0 todos-item" data-id="{{$row->id}}" data-sequence="{{$row->sequence}}">
+                            <span class="w-5/6 p-2 border border-gray-300 mr-4 bg-white flex justify-between items-center">
                                 <a href="{{route('todos.show', $row->id)}}">
                                     {{$row->subject}}
                                 </a>
+                                <i class="fa-solid fa-bars handle"></i>
                             </span>
                             <div class="flex items-center justify-around w-24 h-full border">
+                            <div class="flex items-center justify-around w-24 h-full border bg-white">
                                 <button class="btn-check" data-id="{{$row->id}}" data-check="{{$row->is_check}}">
                                     @if($row->is_check)
                                         <i class="fa-solid fa-square-check"></i>

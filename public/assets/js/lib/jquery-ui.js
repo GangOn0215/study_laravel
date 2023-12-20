@@ -15537,6 +15537,8 @@
             scope: "default",
             tolerance: "intersect",
             zIndex: 1000,
+            restrict: false, // 드래그 제한 시키는가? (ex 햄버거 바 를 드래그 해야만 움직이게 하는가 ? )
+            restrictClass: '', // restrict이 true 라면 어떤 클래스를 사용할것인가
 
             // Callbacks
             activate: null,
@@ -15614,6 +15616,11 @@
         },
 
         _mouseCapture: function( event, overrideHandle ) {
+            // 여기서 만약 restrict 가 true 이면서 드래그 할 영역이 restrict class 인지 확인 해서 아니면 return
+            if(!(this.options.restrict && $(event.target).hasClass(this.options.restrictClass))) {
+                return false;
+            }
+
             var currentItem = null,
                 validHandle = false,
                 that = this;
