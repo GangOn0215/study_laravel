@@ -86,6 +86,7 @@ class Todos extends Model
         }
 
         $query->orderBy('id', 'DESC');
+        $query->orderBy('sequence', 'DESC');
 
         $result = $query->get();
 

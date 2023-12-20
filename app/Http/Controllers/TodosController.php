@@ -207,4 +207,19 @@ class TodosController extends Controller
 
         return redirect()->route('todos.index');
     }
+
+    public function ajax(Request $request) {
+        $resData = $request->input('data');
+
+        for($i = 0; $i < count($resData['idx']); $i++) {
+            $updateData = array(
+                'sequence' => $resData['sequence'][$i]
+            );
+
+            Todos::where('id', $resData['idx'][$i])
+                ->update($updateData);
+        }
+
+        return response()->json([ 'state' => true ]);
+    }
 }

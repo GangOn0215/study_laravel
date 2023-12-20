@@ -26,8 +26,6 @@
             <div class="flex w-full todo-body border border-gray-400 p-4 mt-4">
                 <ul class="flex flex-col w-full" id="sortable">
                     @foreach($data['application'] as $row)
-                        <li class="flex w-full items-center justify-between h-10 mb-4 ui-state-default bg-white border-0">
-                            <span class="w-5/6 p-2 border border-gray-300 mr-4">
                         <li class="flex w-full items-center justify-between mb-4 ui-state-default bg-transparent border-0 todos-item" data-id="{{$row->id}}" data-sequence="{{$row->sequence}}">
                             <span class="w-5/6 p-2 border border-gray-300 mr-4 bg-white flex justify-between items-center">
                                 <a href="{{route('todos.show', $row->id)}}">
@@ -35,7 +33,6 @@
                                 </a>
                                 <i class="fa-solid fa-bars handle"></i>
                             </span>
-                            <div class="flex items-center justify-around w-24 h-full border">
                             <div class="flex items-center justify-around w-24 h-full border bg-white">
                                 <button class="btn-check" data-id="{{$row->id}}" data-check="{{$row->is_check}}">
                                     @if($row->is_check)
@@ -66,10 +63,72 @@
     </section>
 
     <script>
-        const data = {};
+        const applicationManage = {
+            idx: [],
+            sequence: []
+        }
+
+        function init() {
+            // applicationManage 초기화
+            // array 로 만들고 todos items 를 가져옵니다
+            reloadApplicationManage(true);
+
+            // 드래그 앤 드랍
+            const sortable = $('#sortable');
+
+            sortable.sortable({
+                placeholder: "ui-state-highlight-2",
+                restrict: true,
+                restrictClass: 'handle',
+                update: function(e, ui) { // 업데이트 이후
+                    // applicationManage의 idx를 reload 시켜줍니다.
+                    reloadApplicationManage();
+
+                    // ajax로 변경된 부분을 바로 반영
+                    $.ajax({
+                        type: 'POST',
+                        url: `todos/ajax`,
+                        dataType: 'json',
+                        data: { _token: '{{ csrf_token() }}', _method: 'POST', data: applicationManage  },
+                        success: function(response) {
+                            if(response.state) {
+                            }
+                        },
+                        error: function (e) {
+                        }
+                    });
+                }
+            });
+
+            sortable.disableSelection();
+        }
+
+        /*
+        * 1. 최초 한번 INIT
+        * 2. Sortable에 의해 변경된 idx를 reload
+        *
+        * */
+        function reloadApplicationManage(isFirst = false) {
+            const todosItemList = Array.from($('.todos-item'));
+
+            // 초기화
+            applicationManage['idx'] = [];
+
+            todosItemList.forEach(function(item, index) {
+                const id = $(item).attr('data-id');
+                const sequence = $(item).attr('data-sequence');
+
+                applicationManage['idx'].push(id);
+
+                if(isFirst) {
+                    applicationManage['sequence'].push(sequence);
+                }
+            });
+        }
 
         $(window).on('load', function() {
 
+            // todos checkbox 눌렀을때
             $('.btn-check').on('click', function() {
                 const id = $(this).attr('data-id');
                 const isCheck = parseInt($(this).attr('data-check'));
@@ -80,13 +139,13 @@
                     1: '<i class="fa-regular fa-square"></i>'
                 }
 
+                // todos 상태 toggle 해주는 부분 ( 그냥 ajax로 update 해준다 )
                 $.ajax({
                     type: 'POST',
                     url: `todos/${id}`,
                     dataType: 'json',
                     data: { _token: '{{ csrf_token() }}', _method: 'PATCH', is_check: toggleCheck, ajax: true },
                     success: function(response) {
-                        // location.reload();
                         if(response.state) {
                             const checkedButton = $(`button.btn-check[data-id="${response.id}"]`);
                             const checkedState = parseInt(checkedButton.attr('data-check'));
@@ -103,14 +162,8 @@
                 });
             });
 
-            const sortable = $('#sortable');
-
-            sortable.sortable({
-                placeholder: "ui-state-highlight-2"
-            });
-
-            sortable.disableSelection();
-
+            init();
         })
+
     </script>
 @endsection
