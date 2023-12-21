@@ -19,7 +19,8 @@ class Todos extends Model
         'image_name',
         'subject',
         'content',
-        'is_check'
+        'is_check',
+        'sequence'
     ];
 
     public static function getColumnList()
@@ -85,7 +86,7 @@ class Todos extends Model
             }
         }
 
-        $query->orderBy('id', 'DESC');
+        // $query->orderBy('id', 'DESC');
         $query->orderBy('sequence', 'DESC');
 
         $result = $query->get();
@@ -93,7 +94,7 @@ class Todos extends Model
         $queries = \DB::getQueryLog();
         $last_query = end($queries);
 
-//        var_dump($last_query); exit;
+        // var_dump($last_query); exit;
 
         return $result;
     }

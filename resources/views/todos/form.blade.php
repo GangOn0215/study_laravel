@@ -8,8 +8,8 @@
                     @csrf
                     @method($data['form_init']['method'])
                     <div class="flex flex-col w-full h-full">
-                        <div class="flex h-60 border border-gray-400 mb-4">
-                            <img src="{{ $data['application']->image_hash_id ? asset('storage/todos/' . $data['application']->image_hash_id) : ''  }}" alt="" id="image" class="object-cover">
+                        <div class="flex h-60 border border-gray-400 mb-4 w-full">
+                            <img src="{{ $data['application']->image_hash_id ? asset('storage/todos/' . $data['application']->image_hash_id) : ''  }}" alt="" id="image" class="object-cover w-full">
                         </div>
                         <div class="flex date-container mb-4">
                             <input type="text" name="date" class="border border-gray-400 p-2 datepicker w-full" value="{{$data['application']->date ?: date('Y-m-d')}}" readonly>
@@ -62,5 +62,3 @@
         </script>
 
 @endsection
-
-

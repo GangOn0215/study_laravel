@@ -37,7 +37,7 @@ class TodosController extends Controller
         }
 
         $todos = Todos::lists(array(
-            'limit' => 5,
+            'limit' => 0,
             'start' => 0,
             'searches' => array('start_date' => $startDate, 'end_date' => $endDate, 'created_member' => Auth::id())
         ));
