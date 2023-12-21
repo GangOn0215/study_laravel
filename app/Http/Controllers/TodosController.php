@@ -6,6 +6,7 @@ use App\Models\Todos;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -98,12 +99,16 @@ class TodosController extends Controller
             $path = $file->storeAs( 'public/todos/', $fileHashName);
         }
 
+        // todos sequence 마지막 가져오기
+        $sequenceLastRow = Todos::orderBy('sequence', 'desc')->first();
+
         $data = array(
             'image_hash_id' => $fileHashName,
             'image_name' => $fileOriginalName,
             'subject' => $request['subject'],
             'content' => $request['content'],
             'created_member' => auth::id(),
+            'sequence' => $sequenceLastRow->sequence + 1,
             'date' => date('Y-m-d')
         );
 
@@ -120,9 +125,11 @@ class TodosController extends Controller
      */
     public function show(Todos $todo): View|Factory|Application
     {
-        $todos = Todos::where('id', $todo->id)->first();
+        $application = Todos::where('id', $todo->id)->first();
 
-        return view('todos.view')->with('row', $todos);
+        $data['application'] = $application;
+
+        return view('todos.view')->with('data', $data);
     }
 
     /**
@@ -151,7 +158,7 @@ class TodosController extends Controller
      *
      * @param Request $request
      * @param Todos $todo
-     * @return \Illuminate\Http\JsonResponse|RedirectResponse
+     * @return JsonResponse|RedirectResponse
      */
     public function update(Request $request, todos $todo)
     {
@@ -199,16 +206,33 @@ class TodosController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Todos $todo
-     * @return RedirectResponse
+     * @return JsonResponse|RedirectResponse
      */
-    public function destroy(Todos $todo): RedirectResponse
+    public function destroy(Todos $todo, Request $request)
     {
+        $requestData = $request->all();
+
+        $id = $todo['id'];
+        $sequence = $todo['sequence'];
+
         $todo->delete();
+
+        if($request->input('ajax')) {
+            return response()->json(
+                [
+                    'state' => true,
+                    'data' => [
+                        'id' => $id,
+                        'sequence' => $sequence
+                    ]
+                ]
+            );
+        }
 
         return redirect()->route('todos.index');
     }
 
-    public function ajax(Request $request) {
+    public function ajaxSequenceChange(Request $request) {
         $resData = $request->input('data');
 
         for($i = 0; $i < count($resData['idx']); $i++) {

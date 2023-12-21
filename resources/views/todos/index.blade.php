@@ -46,13 +46,9 @@
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                 </button>
-                                <form action="{{route('todos.destroy', $row->id)}}" method="post" class="m-0">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit">
-                                        <i class="fa-regular fa-trash-can"></i>
-                                    </button>
-                                </form>
+                                <button class="delete-todo" data-id="{{$row->id}}">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
                             </div>
                         </li>
                     @endforeach
@@ -87,7 +83,7 @@
                     // ajax로 변경된 부분을 바로 반영
                     $.ajax({
                         type: 'POST',
-                        url: `todos/ajax`,
+                        url: `todos/ajaxSequenceChange`,
                         dataType: 'json',
                         data: { _token: '{{ csrf_token() }}', _method: 'POST', data: applicationManage  },
                         success: function(response) {
@@ -161,6 +157,37 @@
                     }
                 });
             });
+
+            // todos delete 눌렀을때
+            $('.delete-todo').on('click', function(e) {
+                e.preventDefault();
+
+                const id = $(this).attr('data-id');
+
+                $.ajax({
+                    type: 'POST',
+                    url: `todos/${id}`,
+                    dataType: 'json',
+                    data: { _token: '{{ csrf_token() }}', _method: 'DELETE', ajax: true  },
+                    success: function(response) {
+                        const resData = response.data;
+
+                        if(response.state) {
+                            // 삭제 된 todos의 id와 sequence를 applicationManage 변수에서 찾아내서 삭제해야 합니다
+                            const idIndex = applicationManage['idx'].indexOf(resData['id'].toString());
+                            const seqIndex = applicationManage['sequence'].indexOf(resData['sequence'].toString());
+
+                            applicationManage['idx'].splice(idIndex, 1);
+                            applicationManage['sequence'].splice(seqIndex, 1);
+
+                            $(`li.todos-item[data-id="${resData['id']}"]`).fadeOut(300, function() { $(this).remove() });
+                        }
+                    },
+                    error: function (e) {
+                    }
+                });
+
+            })
 
             init();
         })
