@@ -35,7 +35,7 @@ Route::get('/project', function() {
     return view('project/index');
 });
 
-Route::post('/todos/ajax',[TodosController::class, 'ajax']);
+Route::post('/todos/ajaxSequenceChange',[TodosController::class, 'ajaxSequenceChange']);
 Route::resource('todos', TodosController::class)->middleware('auth');
 
 Route::resource('boards', BoardsController::class);
