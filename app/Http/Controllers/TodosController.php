@@ -14,11 +14,23 @@ use Illuminate\Support\Facades\Schema;
 
 class TodosController extends Controller
 {
-    private $data = array();
+    private array $data = array();
+    private $session = null;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
         $data['session'] = session();
+
+        // query string
+        $checkQueryKeys = array('start_date', 'end_date');
+        $data['queryString'] = '?';
+
+        foreach($request->query() as $k => $v) {
+            if(in_array($k, $checkQueryKeys)) {
+                $data['queryString'] .= "&{$k}= {$v}";
+            }
+        }
+
     }
 
     /**
