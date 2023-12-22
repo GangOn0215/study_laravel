@@ -23,16 +23,64 @@
                 <a href="{{route('todos.create')}}" class="w-24 py-1 px-2 border border-gray-400 text-center">Create</a>
             </div>
 
-            <div class="flex w-full todo-body border border-gray-400 p-4 mt-4">
-                <ul class="flex flex-col w-full" id="sortable">
+            <div class="flex flex-col w-full todo-body border border-gray-400 p-4 mt-4">
+                <ul id="sortable-1" class="flex flex-col w-full connect-group">
+                    <li class="flex justify-between items-center flex-col w-full mb-4 bg-transparent border-0">
+                        <div class="w-full p-2 border border-gray-300 flex justify-between items-center bg-rose-400">
+                            <a href="" class="font-bold">
+                                Group A
+                            </a>
+                            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                        </div>
+                        <ul id="sortable-item-1" class="w-full h-24 border border-rose-200 connect-group">
+                            <li class="ui-state-default"></li>
+                        </ul>
+                    </li>
+                    <li class="flex justify-between items-center flex-col w-full mb-4 bg-transparent border-0">
+                        <div class="w-full p-2 border border-gray-300 flex justify-between items-center bg-rose-400">
+                            <a href="" class="font-bold">
+                                Group A
+                            </a>
+                            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                        </div>
+                        <div id="" class="w-full h-24 border border-rose-200 ">
+                            <ul>
+                                <li class="ui-state-default"></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+
+                <ul id="sortable" class="flex flex-col w-full connect-group">
+                    <li class="flex justify-between items-center flex-col w-full mb-4 bg-transparent border-0">
+                        <div class="w-full p-2 border border-gray-300 flex justify-between items-center bg-rose-400">
+                            <a href="" class="font-bold">
+                                Group A
+                            </a>
+                            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                        </div>
+                        <div class="w-full h-24 border border-rose-200">
+                            <ul>
+                                <li class="ui-state-default"></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="flex w-full items-center justify-between mb-4 ui-state-default bg-transparent border-0">
+                        <div class="w-full p-2 border border-gray-300 flex justify-between items-center bg-orange-400">
+                            <a href="" class="font-bold">
+                                Group B
+                            </a>
+                            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                        </div>
+                    </li>
                     @foreach($data['application'] as $row)
                         <li class="flex w-full items-center justify-between mb-4 ui-state-default bg-transparent border-0 todos-item" data-id="{{$row->id}}" data-sequence="{{$row->sequence}}">
-                            <span class="w-5/6 p-2 border border-gray-300 mr-4 bg-white flex justify-between items-center">
+                            <div class="w-5/6 p-2 border border-gray-300 mr-4 bg-white flex justify-between items-center">
                                 <a href="{{route('todos.show', $row->id)}}">
                                     {{$row->subject}}
                                 </a>
                                 <i class="fa-solid fa-bars handle"></i>
-                            </span>
+                            </div>
                             <div class="flex items-center justify-around w-24 h-full border bg-white">
                                 <button class="btn-check" data-id="{{$row->id}}" data-check="{{$row->is_check}}">
                                     @if($row->is_check)
@@ -71,9 +119,11 @@
 
             // 드래그 앤 드랍
             const sortable = $('#sortable');
+            const sortable1 = $('#sortable1');
 
-            sortable.sortable({
+            $('#sortable, #sortable-1, #sortable-item-1').sortable({
                 placeholder: "ui-state-highlight-2",
+                connectWith: ".connect-group",
                 restrict: true,
                 restrictClass: 'handle',
                 update: function(e, ui) { // 업데이트 이후
@@ -88,15 +138,15 @@
                         data: { _token: '{{ csrf_token() }}', _method: 'POST', data: applicationManage  },
                         success: function(response) {
                             if(response.state) {
+
                             }
                         },
                         error: function (e) {
                         }
                     });
                 }
-            });
+            }).disableSelection();
 
-            sortable.disableSelection();
         }
 
         /*
