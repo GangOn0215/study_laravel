@@ -15539,6 +15539,7 @@
             zIndex: 1000,
             restrict: false, // 드래그 제한 시키는가? (ex 햄버거 바 를 드래그 해야만 움직이게 하는가 ? )
             restrictClass: '', // restrict이 true 라면 어떤 클래스를 사용할것인가
+            useCustomGroupHeight: false, // 그룹화 할때 height를 그룹의 header로 사용할것인지 체크
 
             // Callbacks
             activate: null,
@@ -15668,7 +15669,6 @@
         },
 
         _mouseStart: function( event, overrideHandle, noActivation ) {
-
             var i, body,
                 o = this.options;
 
@@ -16422,6 +16422,18 @@
 
                         if ( !className ) {
                             element.css( "visibility", "hidden" );
+                        }
+
+                        let targetHeight = 0;
+
+                        if(o.useCustomGroupHeight) {
+                            targetHeight = $(that.currentItem[0]).find('div.group-header').css('height');
+
+                            element.css('height', targetHeight);
+                        } else {
+                            targetHeight = $(that.currentItem[0]).css('height');
+
+                            element.css('height', targetHeight);
                         }
 
                         return element;
