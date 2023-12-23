@@ -2,6 +2,9 @@
 
 <style>
     .ui-state-highlight-2 { height: 2.5em; line-height: 2.5em; margin: 1rem; background-color: #cdd1d7 !important; border: 1px solid #9ca3af !important; }
+    .ui-state-highlight-3 { height: 100%; line-height: 100%; margin: 1rem; background-color: red !important; border: 1px solid #9ca3af !important; }
+    .show-todo-item { transition: .5s ease-out; }
+    .show-todo-item.close { transform: rotate(-180deg); }
 </style>
 
 @section('content')
@@ -24,82 +27,60 @@
             </div>
 
             <div class="flex flex-col w-full todo-body border border-gray-400 p-4 mt-4">
-                <ul id="sortable-1" class="flex flex-col w-full connect-group">
+                <ul id="sortable" class="flex flex-col w-full">
                     <li class="flex justify-between items-center flex-col w-full mb-4 bg-transparent border-0">
                         <div class="w-full p-2 border border-gray-300 flex justify-between items-center bg-rose-400">
                             <a href="" class="font-bold">
                                 Group A
                             </a>
-                            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                            <i class="fa-solid fa-caret-down show-todo-item"></i>
                         </div>
-                        <ul id="sortable-item-1" class="w-full h-24 border border-rose-200 connect-group">
-                            <li class="ui-state-default"></li>
-                        </ul>
-                    </li>
-                    <li class="flex justify-between items-center flex-col w-full mb-4 bg-transparent border-0">
-                        <div class="w-full p-2 border border-gray-300 flex justify-between items-center bg-rose-400">
-                            <a href="" class="font-bold">
-                                Group A
-                            </a>
-                            <i class="fa-solid fa-bars" aria-hidden="true"></i>
-                        </div>
-                        <div id="" class="w-full h-24 border border-rose-200 ">
-                            <ul>
-                                <li class="ui-state-default"></li>
+                        <div class="w-full h-full py-8 px-4 border border-rose-200">
+                            <ul id="" class="sortable-item connect-item min-h-[2rem]">
                             </ul>
                         </div>
                     </li>
-                </ul>
 
-                <ul id="sortable" class="flex flex-col w-full connect-group">
-                    <li class="flex justify-between items-center flex-col w-full mb-4 bg-transparent border-0">
-                        <div class="w-full p-2 border border-gray-300 flex justify-between items-center bg-rose-400">
-                            <a href="" class="font-bold">
-                                Group A
-                            </a>
-                            <i class="fa-solid fa-bars" aria-hidden="true"></i>
-                        </div>
-                        <div class="w-full h-24 border border-rose-200">
-                            <ul>
-                                <li class="ui-state-default"></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="flex w-full items-center justify-between mb-4 ui-state-default bg-transparent border-0">
-                        <div class="w-full p-2 border border-gray-300 flex justify-between items-center bg-orange-400">
+                    <li class="flex flex-col w-full items-center justify-between mb-4 bg-transparent border-0">
+                        <div class="w-full p-2 border border-amber-600 flex justify-between items-center bg-orange-400">
                             <a href="" class="font-bold">
                                 Group B
                             </a>
-                            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                            <i class="fa-solid fa-caret-down show-todo-item"></i>
                         </div>
+                        <div class="h-full w-full py-8 px-4 border border-amber-600 border-t-0">
+                            <ul id="" class="sortable-item connect-item">
+                                @foreach($data['application'] as $row)
+                                    <li class="flex w-full justify-between bg-transparent mb-4 border-0 todos-item ui-state-default" data-id="{{$row->id}}" data-sequence="{{$row->sequence}}">
+                                        <div class="w-5/6 p-2 border border-gray-300 mr-4 bg-white flex justify-between items-center">
+                                            <a href="{{route('todos.show', $row->id)}}">
+                                                {{$row->subject}}
+                                            </a>
+                                            <i class="fa-solid fa-bars handle"></i>
+                                        </div>
+                                        <div class="flex items-center justify-around w-24 border bg-white">
+                                            <button class="btn-check" data-id="{{$row->id}}" data-check="{{$row->is_check}}">
+                                                @if($row->is_check)
+                                                    <i class="fa-solid fa-square-check"></i>
+                                                @else
+                                                    <i class="fa-regular fa-square"></i>
+                                                @endif
+                                            </button>
+                                            <button class="">
+                                                <a href="{{route('todos.edit', $row->id)}}">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </a>
+                                            </button>
+                                            <button class="delete-todo" data-id="{{$row->id}}">
+                                                <i class="fa-regular fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
                     </li>
-                    @foreach($data['application'] as $row)
-                        <li class="flex w-full items-center justify-between mb-4 ui-state-default bg-transparent border-0 todos-item" data-id="{{$row->id}}" data-sequence="{{$row->sequence}}">
-                            <div class="w-5/6 p-2 border border-gray-300 mr-4 bg-white flex justify-between items-center">
-                                <a href="{{route('todos.show', $row->id)}}">
-                                    {{$row->subject}}
-                                </a>
-                                <i class="fa-solid fa-bars handle"></i>
-                            </div>
-                            <div class="flex items-center justify-around w-24 h-full border bg-white">
-                                <button class="btn-check" data-id="{{$row->id}}" data-check="{{$row->is_check}}">
-                                    @if($row->is_check)
-                                        <i class="fa-solid fa-square-check"></i>
-                                    @else
-                                        <i class="fa-regular fa-square"></i>
-                                    @endif
-                                </button>
-                                <button class="">
-                                    <a href="{{route('todos.edit', $row->id)}}">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-                                </button>
-                                <button class="delete-todo" data-id="{{$row->id}}">
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </button>
-                            </div>
-                        </li>
-                    @endforeach
                 </ul>
             </div>
 
@@ -112,18 +93,22 @@
             sequence: []
         }
 
+        const sortableItem = $('.sortable-item');
+        const sortableGroup = $('.sortable-group');
+
         function init() {
             // applicationManage 초기화
             // array 로 만들고 todos items 를 가져옵니다
             reloadApplicationManage(true);
 
-            // 드래그 앤 드랍
-            const sortable = $('#sortable');
-            const sortable1 = $('#sortable1');
 
-            $('#sortable, #sortable-1, #sortable-item-1').sortable({
+            // const sortable = $('#sortable');
+            // const sortable1 = $('#sortable1');
+
+            // 드래그 앤 드랍
+            sortableItem.sortable({
                 placeholder: "ui-state-highlight-2",
-                connectWith: ".connect-group",
+                connectWith: ".connect-item",
                 restrict: true,
                 restrictClass: 'handle',
                 update: function(e, ui) { // 업데이트 이후
@@ -147,7 +132,63 @@
                 }
             }).disableSelection();
 
+            // $('#sortable')
+
+            $('.group-header .handle').on('mousedown', function(e) {
+                $('.connect-item').fadeOut(300);
+                $('.connect-item').closest('div').fadeOut(300)
+            })
+
+            document.addEventListener("dragstart", (event) => {
+                // 드래그한 요소에 대한 참조 저장
+                dragged = event.target;
+                // 반투명하게 만들기
+                event.target.classList.add("dragging");
+            });
+
+            $('#sortable').sortable({
+                placeholder: "ui-state-highlight-3",
+                connectWith: ".connect-group",
+                restrict: true,
+                restrictClass: 'handle',
+                useCustomGroupHeight: true,
+                stop: function(e, ui) {
+                    $('.connect-item').fadeIn(300);
+                    $('.connect-item').closest('div').fadeIn(300)
+                },
+                update: function(e, ui) { // 업데이트 이후
+                    // applicationManage의 idx를 reload 시켜줍니다.
+                    reloadApplicationManage();
+
+                    // ajax로 변경된 부분을 바로 반영
+                    $.ajax({
+                        type: 'POST',
+                        url: `todos/ajaxSequenceChange`,
+                        dataType: 'json',
+                        data: { _token: '{{ csrf_token() }}', _method: 'POST', data: applicationManage  },
+                        success: function(response) {
+                            if(response.state) {
+
+                            }
+                        },
+                        error: function (e) {
+                        }
+                    });
+                }
+            }).disableSelection();
         }
+
+        $('.show-todo-item').on('click', function(e) {
+            const todoItemContainer = $(this).closest('div').next();
+
+            if(todoItemContainer.css('display') === 'none') {
+                todoItemContainer.fadeIn(500);
+                $(this).removeClass('close');
+            } else {
+                todoItemContainer.fadeOut(300);
+                $(this).addClass('close');
+            }
+        })
 
         /*
         * 1. 최초 한번 INIT
