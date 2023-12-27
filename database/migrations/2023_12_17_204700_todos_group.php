@@ -15,12 +15,12 @@ return new class extends Migration
     public function up()
     {
         //
-        Schema::create('todos_group_table', function (Blueprint $table) {
+        Schema::create('todos_groups', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Todos::class);
-            $table->string('name');
+            $table->string('name'); // 그룹 이름
             $table->integer('depth');
-            $table->integer('sequence');
+            $table->integer('sequence'); // 순서
+            $table->string('color'); // 그룹에 입힐 색상
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('log_statistics');
+        Schema::dropIfExists('todos_groups');
     }
 };

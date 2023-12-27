@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('todos', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('group_id');
             $table->bigInteger('created_member');
             $table->date('date');
             $table->string('subject');
             $table->string('content')->nullable();
             $table->boolean('is_check')->default(0);
             $table->integer('sequence');
-            $table->integer('group_id');
             $table->timestamps();
         });
     }

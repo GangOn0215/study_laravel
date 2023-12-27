@@ -28,28 +28,15 @@
 
             <div class="flex flex-col w-full todo-body border border-gray-400 p-4 mt-4">
                 <ul id="sortable" class="flex flex-col w-full">
-                    <li class="flex justify-between items-center flex-col w-full mb-4 bg-transparent border-0">
-                        <div class="w-full p-2 border border-gray-300 flex justify-between items-center bg-rose-400">
-                            <a href="" class="font-bold">
-                                Group A
-                            </a>
-                            <i class="fa-solid fa-caret-down show-todo-item"></i>
-                        </div>
-                        <div class="w-full h-full py-8 px-4 border border-rose-200">
-                            <ul id="" class="sortable-item connect-item min-h-[2rem]">
-                            </ul>
-                        </div>
-                    </li>
-
                     <li class="flex flex-col w-full items-center justify-between mb-4 bg-transparent border-0">
-                        <div class="w-full p-2 border border-amber-600 flex justify-between items-center bg-orange-400">
+                        <div class="w-full p-2 border border-amber-600 flex justify-between items-center bg-rose-400">
                             <a href="" class="font-bold">
-                                Group B
+                                Group Default
                             </a>
                             <i class="fa-solid fa-caret-down show-todo-item"></i>
                         </div>
-                        <div class="h-full w-full py-8 px-4 border border-amber-600 border-t-0">
-                            <ul id="" class="sortable-item connect-item">
+                        <div class="h-full w-full py-8 px-4 border border-rose-600 border-t-0">
+                            <ul id="" class="sortable-item connect-item min-h-[2rem]">
                                 @foreach($data['application'] as $row)
                                     <li class="flex w-full justify-between bg-transparent mb-4 border-0 todos-item ui-state-default" data-id="{{$row->id}}" data-sequence="{{$row->sequence}}">
                                         <div class="w-5/6 p-2 border border-gray-300 mr-4 bg-white flex justify-between items-center">
@@ -81,6 +68,21 @@
                         </div>
 
                     </li>
+
+                    @foreach($data['group_list'] as $groupRow)
+                    <li class="flex justify-between items-center flex-col w-full mb-4 bg-transparent border-0">
+                        <div class="w-full p-2 border border-amber-600 border-b-0 flex justify-between items-center bg-orange-400">
+                            <a href="" class="font-bold">
+                                Group {{$groupRow->name}}
+                            </a>
+                            <i class="fa-solid fa-caret-down show-todo-item"></i>
+                        </div>
+                        <div class="w-full h-full py-8 px-4 border border-amber-600">
+                            <ul id="" class="sortable-item connect-item min-h-[2rem]">
+                            </ul>
+                        </div>
+                    </li>
+                    @endforeach
                 </ul>
             </div>
 

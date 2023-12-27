@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Todos;
+use App\Models\TodosGroup;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -52,10 +53,17 @@ class TodosController extends Controller
         $todos = Todos::lists(array(
             'limit' => 0,
             'start' => 0,
-            'searches' => array('start_date' => $startDate, 'end_date' => $endDate, 'created_member' => Auth::id())
+            'searches' => array('start_date' => $startDate, 'end_date' => $endDate, 'created_member' => Auth::id(), 'group_id' => 0)
+        ));
+
+        $todosGroupList = TodosGroup::lists(array(
+            'limit' => 0,
+            'start' => 0,
+            'searches' => array('created_member' => Auth::id())
         ));
 
         $data['application'] = $todos;
+        $data['group_list'] = $todosGroupList;
 
         return view('todos.index')->with('data', $data);
     }
