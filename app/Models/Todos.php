@@ -13,6 +13,7 @@ class Todos extends Model
     use HasFactory;
 
     protected $fillable = [
+        'group_id',
         'created_member',
         'date',
         'image_hash_id',
@@ -88,6 +89,7 @@ class Todos extends Model
         }
 
         // $query->orderBy('id', 'DESC');
+        $query->orderBy('group_id', 'ASC');
         $query->orderBy('sequence', 'DESC');
 
         $result = $query->get();

@@ -17,6 +17,14 @@
                         <div class="flex w-full h-10 todo-header mb-4">
                             <input type="text" name="subject" class="w-full border border-gray-400 p-2" value="{{$data['application']->subject}}" placeholder="TODO">
                         </div>
+                        <div class="flex w-full h-10 todo-header mb-4">
+                            <select name="group_id" class="w-full border border-gray-400 p-2">
+                                <option value="">선택</option>
+                                @foreach($data['group_list'] as $groupRow)
+                                    <option value="{{$groupRow->id}}"> {{$groupRow->name}} </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <textarea name="content" class="border border-gray-400 mb-4 resize-none p-2" cols="30" rows="10"  placeholder="TODO Description">{{$data['application']->content}}</textarea>
                         <div class="flex mb-4">
                             <input type="file" id="file-info" name="image" style="display: none">

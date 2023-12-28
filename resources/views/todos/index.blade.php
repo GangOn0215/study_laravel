@@ -28,60 +28,46 @@
 
             <div class="flex flex-col w-full todo-body border border-gray-400 p-4 mt-4">
                 <ul id="sortable" class="flex flex-col w-full">
-                    <li class="flex flex-col w-full items-center justify-between mb-4 bg-transparent border-0">
-                        <div class="w-full p-2 border border-amber-600 flex justify-between items-center bg-rose-400">
-                            <a href="" class="font-bold">
-                                Group Default
-                            </a>
-                            <i class="fa-solid fa-caret-down show-todo-item"></i>
-                        </div>
-                        <div class="h-full w-full py-8 px-4 border border-rose-600 border-t-0">
-                            <ul id="" class="sortable-item connect-item min-h-[2rem]">
-                                @foreach($data['application'] as $row)
-                                    <li class="flex w-full justify-between bg-transparent mb-4 border-0 todos-item ui-state-default" data-id="{{$row->id}}" data-sequence="{{$row->sequence}}">
-                                        <div class="w-5/6 p-2 border border-gray-300 mr-4 bg-white flex justify-between items-center">
-                                            <a href="{{route('todos.show', $row->id)}}">
-                                                {{$row->subject}}
-                                            </a>
-                                            <i class="fa-solid fa-bars handle"></i>
-                                        </div>
-                                        <div class="flex items-center justify-around w-24 border bg-white">
-                                            <button class="btn-check" data-id="{{$row->id}}" data-check="{{$row->is_check}}">
-                                                @if($row->is_check)
-                                                    <i class="fa-solid fa-square-check"></i>
-                                                @else
-                                                    <i class="fa-regular fa-square"></i>
-                                                @endif
-                                            </button>
-                                            <button class="">
-                                                <a href="{{route('todos.edit', $row->id)}}">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
+                    @foreach($data['sort_todos'] as $k => $groupInfo)
+                        <li class="flex justify-between items-center flex-col w-full mb-4 bg-transparent border-0">
+                            <div class="w-full p-2 border border-amber-600 border-b-0 flex justify-between items-center bg-orange-400">
+                                <a href="" class="font-bold">
+                                    Group {{$data['group_name'][$k]}}
+                                </a>
+                                <i class="fa-solid fa-caret-down show-todo-item"></i>
+                            </div>
+                            <div class="w-full h-full py-8 px-4 border border-amber-600">
+                                <ul id="" class="sortable-item connect-item min-h-[2rem]">
+                                    @foreach($groupInfo as $row)
+                                        <li class="flex w-full justify-between bg-transparent mb-4 border-0 todos-item ui-state-default" data-id="{{$row->id}}" data-sequence="{{$row->sequence}}">
+                                            <div class="w-5/6 p-2 border border-gray-300 mr-4 bg-white flex justify-between items-center">
+                                                <a href="{{route('todos.show', $row->id)}}">
+                                                    {{$row->subject}}
                                                 </a>
-                                            </button>
-                                            <button class="delete-todo" data-id="{{$row->id}}">
-                                                <i class="fa-regular fa-trash-can"></i>
-                                            </button>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-
-                    </li>
-
-                    @foreach($data['group_list'] as $groupRow)
-                    <li class="flex justify-between items-center flex-col w-full mb-4 bg-transparent border-0">
-                        <div class="w-full p-2 border border-amber-600 border-b-0 flex justify-between items-center bg-orange-400">
-                            <a href="" class="font-bold">
-                                Group {{$groupRow->name}}
-                            </a>
-                            <i class="fa-solid fa-caret-down show-todo-item"></i>
-                        </div>
-                        <div class="w-full h-full py-8 px-4 border border-amber-600">
-                            <ul id="" class="sortable-item connect-item min-h-[2rem]">
-                            </ul>
-                        </div>
-                    </li>
+                                                <i class="fa-solid fa-bars handle"></i>
+                                            </div>
+                                            <div class="flex items-center justify-around w-24 border bg-white">
+                                                <button class="btn-check" data-id="{{$row->id}}" data-check="{{$row->is_check}}">
+                                                    @if($row->is_check)
+                                                        <i class="fa-solid fa-square-check"></i>
+                                                    @else
+                                                        <i class="fa-regular fa-square"></i>
+                                                    @endif
+                                                </button>
+                                                <button class="">
+                                                    <a href="{{route('todos.edit', $row->id)}}">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>
+                                                </button>
+                                                <button class="delete-todo" data-id="{{$row->id}}">
+                                                    <i class="fa-regular fa-trash-can"></i>
+                                                </button>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </li>
                     @endforeach
                 </ul>
             </div>

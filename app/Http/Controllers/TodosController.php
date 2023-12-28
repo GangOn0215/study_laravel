@@ -20,18 +20,23 @@ class TodosController extends Controller
 
     public function __construct(Request $request)
     {
-        $data['session'] = session();
+        $this->data['session'] = session();
 
         // query string
         $checkQueryKeys = array('start_date', 'end_date');
-        $data['queryString'] = '?';
+        $this->data['queryString'] = '?';
 
         foreach($request->query() as $k => $v) {
             if(in_array($k, $checkQueryKeys)) {
-                $data['queryString'] .= "&{$k}= {$v}";
+                $this->data['queryString'] .= "&{$k}= {$v}";
             }
         }
 
+        $this->data['group_list'] = TodosGroup::lists(array(
+            'limit' => 0,
+            'start' => 0,
+            'searches' => array('created_member' => Auth::id())
+        ));
     }
 
     /**
@@ -43,29 +48,35 @@ class TodosController extends Controller
     {
         $requestAll = $request->all();
 
-        $startDate = $data['start_date'] = $requestAll['start_date'] ?? null;
-        $endDate = $data['end_date'] = $requestAll['end_date'] ?? null;
+        $startDate = $this->data['start_date'] = $requestAll['start_date'] ?? null;
+        $endDate = $this->data['end_date'] = $requestAll['end_date'] ?? null;
 
         if(!$startDate && !$endDate) {
-            $startDate = $data['start_date'] = date('Y-m-d');
+            $startDate = $this->data['start_date'] = date('Y-m-d');
         }
 
         $todos = Todos::lists(array(
             'limit' => 0,
             'start' => 0,
-            'searches' => array('start_date' => $startDate, 'end_date' => $endDate, 'created_member' => Auth::id(), 'group_id' => 0)
+            'searches' => array('start_date' => $startDate, 'end_date' => $endDate, 'created_member' => Auth::id())
         ));
 
-        $todosGroupList = TodosGroup::lists(array(
-            'limit' => 0,
-            'start' => 0,
-            'searches' => array('created_member' => Auth::id())
-        ));
+        $sortTodos = array();
+        $groupNames = array(0 => 'default');
 
-        $data['application'] = $todos;
-        $data['group_list'] = $todosGroupList;
+        foreach($todos as $row) {
+            $sortTodos[$row->group_id ?: 0][] = $row;
+        }
 
-        return view('todos.index')->with('data', $data);
+        foreach($this->data['group_list'] as $row) {
+            $groupNames[$row->id] = $row->name;
+        }
+
+        $this->data['application'] = $todos;
+        $this->data['sort_todos'] = $sortTodos;
+        $this->data['group_name'] = $groupNames;
+
+        return view('todos.index')->with('data', $this->data);
     }
 
     /**
@@ -82,15 +93,15 @@ class TodosController extends Controller
             $application->$column = '';
         }
 
-        $data['application'] = $application;
+        $this->data['application'] = $application;
 
-        $data['form_init'] = array(
+        $this->data['form_init'] = array(
             'action' => 'todos.store',
             'method' => 'POST',
             'submit_text' => '확인'
         );
 
-        return view('todos.form')->with('data', $data);
+        return view('todos.form')->with('data', $this->data);
     }
 
     /**
@@ -128,6 +139,7 @@ class TodosController extends Controller
             'subject' => $request['subject'],
             'content' => $request['content'],
             'created_member' => auth::id(),
+            'group_id' => $request['group_id'],
             'sequence' => $sequenceLastRow->sequence + 1,
             'date' => date('Y-m-d')
         );
@@ -147,9 +159,9 @@ class TodosController extends Controller
     {
         $application = Todos::where('id', $todo->id)->first();
 
-        $data['application'] = $application;
+        $this->data['application'] = $application;
 
-        return view('todos.view')->with('data', $data);
+        return view('todos.view')->with('data', $this->data);
     }
 
     /**
@@ -162,15 +174,15 @@ class TodosController extends Controller
     {
         $application = Todos::where('id', $todo->id)->first();
 
-        $data['application'] = $application;
+        $this->data['application'] = $application;
 
-        $data['form_init'] = array(
+        $this->data['form_init'] = array(
             'action' => 'todos.update',
             'method' => 'PATCH',
             'submit_text' => '수정'
         );
 
-        return view('todos.form')->with('data', $data);
+        return view('todos.form')->with('data', $this->data);
     }
 
     /**
@@ -206,6 +218,7 @@ class TodosController extends Controller
         }
 
         $data = array(
+            'group_id' => $request['group_id'],
             'subject' => $request['subject'],
             'content' => $request['content'],
             'date' => $request['date']
