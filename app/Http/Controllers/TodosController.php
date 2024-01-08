@@ -55,9 +55,12 @@ class TodosController extends Controller
             $startDate = $this->data['start_date'] = date('Y-m-d');
         }
 
+        $this->data['limit'] = $limit = 10;
+        $this->data['start'] = $start = 0;
+
         $todos = Todos::lists(array(
-            'limit' => 0,
-            'start' => 0,
+            'limit' => $limit,
+            'start' => $start,
             'searches' => array('start_date' => $startDate, 'end_date' => $endDate, 'created_member' => Auth::id())
         ));
 
@@ -278,5 +281,43 @@ class TodosController extends Controller
         }
 
         return response()->json([ 'state' => true ]);
+    }
+
+    // ajax로 todo list 가져오는것 작업
+    public function ajaxTodoLists(Request $request) {
+        $resData = $request->input('data');
+
+        $todos = Todos::lists(array(
+            'limit' => $resData['limit'],
+            'start' => $resData['start'],
+            'searches' => array('start_date' => $resData['startDate'], 'end_date' => $resData['endDate'], 'created_member' => Auth::id())
+        ));
+
+        // var_dump(count($todos));
+
+        $resultData['state'] = false;
+
+        if(count($todos) <= 0) {
+            $resultData['error'] = '더 이상 데이터가 없습니다.';
+            $resultData['error_code'] = '0001';
+
+            return response()->json($resultData);
+        }
+
+        $resultData = array(
+            'state' => true,
+            'data' => []
+        );
+
+        foreach($todos as $row) {
+            $resultData['data'][] = [
+                'id' => $row->id,
+                'subject' => $row->subject,
+                'is_check' => $row->is_check,
+                'sequence' => $row->sequence
+            ];
+        }
+
+        return response()->json($resultData);
     }
 }

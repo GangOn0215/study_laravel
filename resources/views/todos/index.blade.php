@@ -29,7 +29,7 @@
             <div class="flex flex-col w-full todo-body border border-gray-400 p-4 mt-4">
                 <ul id="sortable" class="flex flex-col w-full">
                     @foreach($data['sort_todos'] as $k => $groupInfo)
-                        <li class="flex justify-between items-center flex-col w-full mb-4 bg-transparent border-0">
+                        <li class="flex justify-between items-center flex-col w-full mb-4 bg-transparent border-0" data-group-id="{{$k}}">
                             <div class="w-full p-2 border border-amber-600 border-b-0 flex justify-between items-center bg-orange-400">
                                 <a href="" class="font-bold">
                                     Group {{$data['group_name'][$k]}}
@@ -79,6 +79,13 @@
         const applicationManage = {
             idx: [],
             sequence: []
+        }
+
+        const ajaxManage = {
+            start: parseInt('{{$data['start'] + $data['limit']}}'),
+            limit: parseInt('{{$data['limit']}}'),
+            startDate: '{{$data['start_date']}}',
+            endDate: '{{$data['end_date']}}'
         }
 
         const sortableItem = $('.sortable-item');
@@ -271,5 +278,74 @@
             init();
         })
 
+        // 스크롤시 발생
+        $(window).scroll(function() {
+            // 스크롤 마지막이면
+            if ( $(window).scrollTop() === ($(document).height() - $(window).height()) ) {
+                console.log('End of Window');
+
+                // ajax로 변경된 부분을 바로 반영
+                $.ajax({
+                    type: 'POST',
+                    url: `todos/ajaxTodoLists`,
+                    dataType: 'json',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        _method: 'POST',
+                        data: {
+                            start: ajaxManage.start,
+                            limit: ajaxManage.limit,
+                            startDate: ajaxManage.startDate,
+                            endDate: ajaxManage.endDate
+                        }
+                    },
+                    success: function(response) {
+                        if(response.state) {
+                            const res = response.data;
+
+                            console.log(res);
+                            res.forEach(function(item, index) {
+                                console.log(item);
+
+                                const isChecked = parseInt(item['is_check']) === 1 ? '<i class="fa-solid fa-square-check" aria-hidden="true"></i>' : '<i class="fa-regular fa-square" aria-hidden="true"></i>';
+
+                                const todoItem = `
+                                <li class="flex w-full justify-between bg-transparent mb-4 border-0 todos-item ui-state-default" data-id="${item['id']}" data-sequence="${item['sequence']}" style="display: none;">
+                                    <div class="w-5/6 p-2 border border-gray-300 mr-4 bg-white flex justify-between items-center">
+                                        <a href="/todos/${item['id']}">
+                                            ${item['subject']}
+                                        </a>
+                                        <i class="fa-solid fa-bars handle" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="flex items-center justify-around w-24 border bg-white">
+                                        <button class="btn-check" data-id="${item['id']}" data-check="${item['is_checked']}">
+                                            ${isChecked}
+                                        </button>
+                                        <button class="">
+                                            <a href="/todos/${item['id']}/edit">
+                                                <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                                            </a>
+                                        </button>
+                                        <button class="delete-todo" data-id="${item['id']}">
+                                            <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </li>`;
+
+                                $('li[data-group-id="0"] ul.sortable-item').append(todoItem);
+
+                                $(`li[data-id="${item['id']}"]`).fadeIn(200);
+
+                            });
+
+
+                            ajaxManage['start'] += ajaxManage['limit'];
+                        }
+                    },
+                    error: function (e) {
+                    }
+                });
+            }
+        });
     </script>
 @endsection
